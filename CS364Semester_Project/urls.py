@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from project import views
 
 # The include() function allows referencing other URLconfs. Whenever Django encounters include(), it chops off whatever
 # part of the URL matched up to that point and sends the remaining string to the included URLconf for further processing
@@ -23,6 +24,7 @@ from django.urls import include, path
 # name argument, look up. This is important for templates
 urlpatterns = [
 	# path('polls/', include('polls.urls')), TODO uncomment if testing polls
-	path('project/', include('project.urls')),
+	# path('', views.home_screen, name='home'),
+	path('', include('project.urls')),  # This call includes every path from the project
 	path('admin/', admin.site.urls),
 ]
