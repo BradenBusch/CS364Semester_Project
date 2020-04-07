@@ -10,9 +10,7 @@ def login_signup(request):
 	context = {
 		# Put dictionary values in here as needed
 	}
-
 	return render(request, 'project/login_signup.html', context)
-	# return HttpResponse("Hello world. At project index")
 
 
 def signup(request):
