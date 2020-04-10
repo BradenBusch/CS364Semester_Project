@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+	'localflavor',
 	'project.apps.ProjectConfig',
 	'polls.apps.PollsConfig',
 	'django.contrib.admin',

@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sign Up</title>
-</head>
-<body>
-    <p>Signup page</p>
-</body>
-</html>
+<!-- Figure out how to pass variables. I want to pass whatever is in Username/Password to the next view -->
+<!-- POST is for a request that makes changes in the database. GET should be used for requests that don't
+     affect the state of the system -->
+{% block content %}
+  <h2>Sign up</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Sign up</button>
+  </form>
+{% endblock %}
