@@ -12,5 +12,5 @@ urlpatterns = [
 	# localhost/home (homescreen / main screen)
 	path('home/', views.home, name='home'),
 	# TODO DELETE THIS IS FOR TEST
-	path('name/', views.get_name, name='get_name'),
+	# path('name/', views.get_name, name='get_name'),
 ]

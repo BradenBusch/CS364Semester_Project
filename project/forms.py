@@ -1,4 +1,5 @@
 from django import forms
+from project.models import *
 from localflavor.us.forms import USStateSelect
 from localflavor.us.us_states import STATE_CHOICES
 
@@ -24,7 +25,24 @@ states = [("AL", "AL"), ("AK", "AK"), ("AZ", "AZ"), ("AR", "AR"), ("CA", "CA"), 
 
 
 class NameForm(forms.Form):
-	# Setting these names here is equivalent to name in <input>
-	firstname = forms.CharField(max_length=50)
-	lastname = forms.CharField(max_length=50)
-	states = forms.ChoiceField(choices=states)
+	FirstName = forms.CharField(max_length=50)
+	LastName = forms.CharField(max_length=50)
+	State = forms.ChoiceField(choices=states)
+
+
+class UserForm(forms.ModelForm):
+	password = forms.CharField(widget=forms.PasswordInput)
+	confirm_password = forms.CharField(widget=forms.PasswordInput)
+
+	class Meta:
+		model = User
+		# could change this to exclude = ['date'] or whatever
+		exclude = ['num_artists', 'num_events']
+
+	def clean(self):
+		cleaned_data = super(UserForm, self).clean()
+		password = cleaned_data.get('password')
+		confirm_password = cleaned_data.get('confirm_password')
+		if password != confirm_password:
+			raise forms.ValidationError('Your passwords do not match.')
+		return cleaned_data
