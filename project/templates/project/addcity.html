@@ -2,15 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login page</title>
+    <title>Add City</title>
 </head>
 <body>
-    <h1>Login</h1>
+    <h1>Add City</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="Submit">
     </form>
-
+    <input type="button" value="Back">
 </body>
 </html>
