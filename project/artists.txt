@@ -1,0 +1,29 @@
+August Burns Red,Metal,700000
+Polaris,Metal,200000
+As I Lay Dying,Metal,1000000
+Breakdown Of Sanity,Metal,350000
+Northlane,Metal,400000
+Make Them Suffer,Metal,250000
+Erra,Metal,170000
+Parkway Drive,Metal,1200000
+Architects,Metal,900000
+Rise Against,Rock,2000000
+Three Days Grace,Rock,4000000
+Shinedown,Rock,3000000
+Disturbed,Rock,4500000
+Skillet,Rock,2000000
+Lil Uzi Vert,Rap,25000000
+Suicide Boys,Rap,5000000
+Abstract,Rap,500000
+The Underachievers,Rap,700000
+A$AP Rocky,Rap,8000000
+Anonymuz,Rap,250000
+Quinn XCII,Pop,7200000
+Jeremy Zucker,Pop,11000000
+Chelsea Cutler,Pop,8000000
+Christian French,Pop,5250000
+Jon Bellion,Pop,10500000
+Lady Gaga,Pop,15200000
+Katy Perry,Pop,17200000
+Justin Bieber,Pop,28000000
+Usher,Pop,9000000

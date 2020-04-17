@@ -4,6 +4,15 @@ from django import forms
 from django.forms import PasswordInput
 
 
+class Location(models.Model):
+	location_id = models.AutoField(primary_key=True)
+	state = models.CharField(max_length=50)
+	city = models.CharField(max_length=50)
+
+	def __str__(self):
+		return f'id: {self.location_id}\ncity {self.city}\n'
+
+
 class User(models.Model):
 	user_id = models.AutoField(primary_key=True)
 	first_name = models.CharField(max_length=100)
@@ -12,9 +21,10 @@ class User(models.Model):
 	password = models.CharField(max_length=100)
 	num_artists = models.IntegerField(default=0)
 	created_at = models.DateTimeField(auto_now_add=True)
+	location = models.ForeignKey(Location, on_delete=models.CASCADE)  # Django auto adds _id to PK's
 
 	def __str__(self):
-		print(f'id: {User.user_id}\n name: {User.first_name} {User.last_name}\n created at: {User.created_at}\n')
+		return f'id: {self.user_id}\n name: {self.first_name} {self.last_name}\n created at: {self.created_at}\n'
 
 
 class Artist(models.Model):
@@ -26,15 +36,7 @@ class Artist(models.Model):
 	artist_name = models.CharField(max_length=200)
 
 	def __str__(self):
-		print(f'id: {Artist.artist_id}\ngenre: {Artist.genre}\nnum fans: {Artist.num_fans} artist_name: {Artist.artist_name}')
-
-
-class Location(models.Model):
-	location_id = models.AutoField(primary_key=True)
-	user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-
-	def __str__(self):
-		print(f'id: {Location.location_id}\ncity {Location.city}\n')
+		return f'id: {self.artist_id}\ngenre: {self.genre}\nnum fans: {self.num_fans} artist_name: {self.artist_name}'
 
 
 class Event(models.Model):
@@ -42,5 +44,8 @@ class Event(models.Model):
 	date = models.DateTimeField()
 	event_name = models.CharField(max_length=200)
 	ticket_price = models.IntegerField()
-	artist_id = models.ForeignKey(Artist, on_delete=models.CASCADE)
-	location_id = models.ForeignKey(Location, on_delete=models.CASCADE)
+	artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+	location = models.ForeignKey(Location, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return f'id: {self.event_id}\ndate: {self.date}\nname: {self.event_name}\n artist: {self.artist.artist_name}\nlocation: {self.location.city} '

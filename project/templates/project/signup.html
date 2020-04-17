@@ -5,5 +5,17 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
+    <small>State: </small>
+    <select id="selectedState" name="selectedState">
+        {% for state in states %}
+            <option value="{{ state }}">{{ state }}</option>
+        {% endfor %}
+    </select>
+    <small>City: </small>
+    <select id="selectedCity" name="selectedCity">
+        {% for city in cities %}
+            <option value="{{ city }}">{{ city }}</option>
+        {% endfor %}
+    </select>
     <input type="submit" value="Submit">
 </form>

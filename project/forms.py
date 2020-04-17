@@ -1,16 +1,18 @@
 from django import forms
 from project.models import *
 
-states_else = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA",
-               "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
-               "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
-               "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
-               "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+states2 = [("Illinois", "Illinois"), ("Iowa", "Iowa"), ("Minnesota", "Minnesota"), ("Wisconsin", "Wisconsin")]
 
-states = [("Illinois", "Illinois"), ("Iowa", "Iowa"), ("Minnesota", "Minnesota"), ("Wisconsin", "Wisconsin")]
-
-cities = [("Aurora", "Aurora"), ("Chicago", "Chicago"), ("Cedar Rapids", "Cedar Rapids"), ("Des Moines", "Des Moines"),
+cities2 = [("Aurora", "Aurora"), ("Chicago", "Chicago"), ("Cedar Rapids", "Cedar Rapids"), ("Des Moines", "Des Moines"),
           ("Madison", "Madison"), ("Minneapolis", "Minneapolis"), ("Milwaukee", "Milwaukee"), ("St. Paul", "St. Paul")]
+
+states = ["Illinois", "Iowa", "Minnesota", "Wisconsin"]
+
+cities = ["Aurora", "Chicago", "Cedar Rapids", "Des Moines", "Madison", "Minneapolis", "Milwaukee", "St. Paul"]
+
+
+class SearchArtist(forms.Form):
+	search = forms.CharField()
 
 
 class LoginForm(forms.ModelForm):
@@ -33,11 +35,13 @@ class LoginForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput)
 	confirm_password = forms.CharField(widget=forms.PasswordInput)
+	# state = forms.ChoiceField(choices=states)
+	# city = forms.ChoiceField(choices=cities)
 
 	class Meta:
 		model = User
 		# could change this to exclude = ['date'] or whatever
-		exclude = ['num_artists', 'password']
+		exclude = ['num_artists', 'password', 'location']
 
 	def clean(self):
 		cleaned_data = super(UserForm, self).clean()
@@ -57,4 +61,4 @@ class StateForm(forms.ModelForm):
 
 	class Meta:
 		model = Location
-		exclude = []
+		exclude = ['user_id']

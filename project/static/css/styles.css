@@ -1,0 +1,10 @@
+#artistList > li:hover {
+    cursor: pointer;
+    color: red;
+}
+
+#artistList > li {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}

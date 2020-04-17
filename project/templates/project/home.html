@@ -4,7 +4,52 @@
     <meta charset="UTF-8">
     <title>Home</title>
 </head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static 'css/styles.css' %}>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <!-- <script src="js/script.js"></script> -->
 <body>
-    <p>At Home Screen</p>
+    <!-- TODO you can use dot notation here to access database fields -->
+    <!-- TODO use JS here to build a list from the text in the search. My idea is to just fill a ul with artist names
+              we can also have an add button that would be next to each artist, or they could be clickable somehow -->
+    <h1>Hello, {{ user.username }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" placeholder="Find an Artist" name="search_bar">
+        <input type="submit" value="Search">
+    </form>
+    <!-- TODO put this in a scrollable div, make them clickable. Will need AJAX  -->
+    <ul id="artistList">
+        {% if artists %}
+            {% for artist in artists %}
+                <li id="li_{{ artist.artist_id }}">{{ artist.artist_name }}</li>
+                <script>
+                    document.getElementById("li_{{ artist.artist_id }}").addEventListener("click", function store_artist_ajax () {
+                        //alert("{{ artist.artist_id }}");
+                        $.ajax({
+                            url: window.location.pathname,
+                            type: "POST",
+                            data: {
+                                csrfmiddlewaretoken: '{{ csrf_token }}',
+                                artist_id: '{{ artist.artist_id }}'
+                            },
+                            success: function() {
+                                //remove artist li here
+                                //alert("Success")
+                                let element = document.getElementById("li_{{ artist.artist_id }}");
+                                element.parentNode.removeChild(element);
+                            },
+                            error: function() {
+                                alert("Unsuccessful")
+                            }
+                        });
+                    });
+                </script>
+                <!-- TODO add AJAX and <a> here. The ajax should also remove the artist from dropdown -->
+            {% endfor %}
+        {% endif %}
+    </ul>
+    <p>{{ user.username }} lives in {{ user.location.city }}, {{ user.location.state }}</p>
+
 </body>
 </html>
