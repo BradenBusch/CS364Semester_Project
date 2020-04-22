@@ -1,10 +1,13 @@
 from .models import *
+from datetime import datetime
 import os
 
 # Run the store locations UPDATE
 STORE_LOCATIONS = False
 # Run the artist UPDATE
 STORE_ARTISTS = False
+# Run the events UPDATE
+STORE_EVENTS = False
 
 
 # Store all information for locations
@@ -38,4 +41,20 @@ def store_artists():
 		vals = line.split(',')
 		artist = Artist(artist_name=vals[0], genre=vals[1], num_fans=int(vals[2]))
 		artist.save()
+	file.close()
+
+
+# [VenueName,TicketPrice,LocationID,ArtistID,Datetime]
+def store_events():
+	file = open(os.path.abspath(os.path.dirname(__file__) + '\\events.txt'))
+	while True:
+		line = file.readline().strip()
+		if not line:
+			break
+		vals = line.split(',')
+		time = datetime.strptime(vals[4], '%Y-%m-%d %H:%M')
+		location = Location.objects.get(location_id=vals[2])
+		artist = Artist.objects.get(artist_id=vals[3])
+		event = Event(event_name=vals[0], ticket_price=int(vals[1]), location=location, artist=artist, date=time)
+		event.save()
 	file.close()

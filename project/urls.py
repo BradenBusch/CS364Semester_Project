@@ -14,6 +14,8 @@ urlpatterns = [
 	path('login/', views.login, name='login'),
 	# localhost/home/Username
 	path('home/<slug:username>/', views.home, name='home'),
+	# localhost/home/Username/explore
+	path('home/<slug:username>/explore', views.explore, name='explore')
 	# localhoust/home/addcity
 	# path('home/<slug:username>/addcity/', views.add_city, name='add_city'),
 

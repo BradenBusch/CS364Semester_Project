@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Find an Artist</title>
+</head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href={% static 'css/styles.css' %}>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<body>
+    <h1>Viewing based on {{ filter_val }} add top 5 most popular from each genre to right side</h1>
+    <form method="post">
+        {% csrf_token %}
+        <select name="filter_artists">
+            <option value="A - Z">A - Z</option>
+            <option value="Popularity">Popularity</option>
+            <option value="Genre - Metal">Genre - Metal</option>
+            <option value="Genre - Rock">Genre - Rock</option>
+            <option value="Genre - Rap">Genre - Rap</option>
+            <option value="Genre - Pop">Genre - Pop</option>
+        </select>
+        <input type="submit" value="Apply">
+    </form>
+    <!--<select name="filter_artists" id="selectFilter">
+        <option value="popularity" selected>Popularity</option>
+        <option value="genre">Genre</option>
+    </select>-->
+    <table>
+        <thead>
+            <tr>
+                <th>Artist</th>
+                <th>Genre</th>
+                <th># Fans</th>
+            </tr>
+        </thead>
+        <tbody id="filtered_artists">
+        {% if artists %}
+            {% for artist in artists %}
+                <tr>
+                    <td class="explore_artist_name"> {{ artist.artist_name }}</td>
+                    <td> {{ artist.genre }}</td>
+                    <td> {{ artist.num_fans }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+    
+    <!--<script>
+        $("#selectFilter").on('change', function(e) {
+            e.preventDefault();
+            let val = $(this).val();
+            $.ajax({
+                url: window.location.pathname,
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    filter_val: val,
+                },
+                success: function (response) {
+                    alert(response);
+                    // do dom stuff here to delete the list
+                }
+            });
+        });
+    </script>-->
+
+</body>
+</html>

@@ -1,10 +1,86 @@
-#artistList > li:hover {
-    cursor: pointer;
-    color: red;
-}
-
-#artistList > li {
-    list-style-type: none;
+* {
     margin: 0;
     padding: 0;
 }
+.artistList > li:hover {
+    cursor: pointer;
+    color: blue;
+}
+
+li {
+    list-style-type: none;
+}
+
+.artistList > li {
+    margin: 0 0 3px 0;
+}
+
+#screen_div {
+    border: 1px solid red;
+    width: 100%;
+    display: inline-flex;
+    text-align: center;
+}
+
+td {
+    padding: 5px;
+    margin: 1px;
+}
+
+#addArtistDiv {
+    border: 1px solid blue;
+    float: left;
+    width: 30%;
+}
+
+#myArtistsDiv {
+    border: 1px solid green;
+    float: right;
+    width: 30%;
+}
+
+#myEventsDiv {
+    width: 40%;
+    border: 1px solid gray;
+    display: inline-block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.topNav {
+    width: 100vw;
+    border: 1px solid red;
+}
+
+.topNav ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.topNav li {
+    list-style-type: none;
+    margin: 0 2vw;
+    font-size: 3vh;
+}
+
+.topNav a {
+    text-decoration: none;
+    color: black;
+    padding: 2vw;
+    font-family: Roboto;
+}
+
+.topNav a:hover {
+    color: gray;
+}
+
+/*#screen_div div {*/
+/*    display: inline-block;*/
+/*    height: 100%;*/
+/*    flex: 1 100%;*/
+/*    text-align: center;*/
+/*    cursor: default;*/
+/*    padding: 2em 0;*/
+/*    border: 1px solid black;*/
+/*}*/

@@ -36,7 +36,7 @@ class Artist(models.Model):
 	artist_name = models.CharField(max_length=200)
 
 	def __str__(self):
-		return f'id: {self.artist_id}\ngenre: {self.genre}\nnum fans: {self.num_fans} artist_name: {self.artist_name}'
+		return f'id: {self.artist_id} genre: {self.genre} num fans: {self.num_fans} artist_name: {self.artist_name}'
 
 
 class Event(models.Model):
@@ -48,4 +48,4 @@ class Event(models.Model):
 	location = models.ForeignKey(Location, on_delete=models.CASCADE)
 
 	def __str__(self):
-		return f'id: {self.event_id}\ndate: {self.date}\nname: {self.event_name}\n artist: {self.artist.artist_name}\nlocation: {self.location.city} '
+		return f'id: {self.event_id} date: {self.date} name: {self.event_name} artist: {self.artist.artist_name} location: {self.location.city} '

@@ -12,43 +12,86 @@
     <!-- TODO you can use dot notation here to access database fields -->
     <!-- TODO use JS here to build a list from the text in the search. My idea is to just fill a ul with artist names
               we can also have an add button that would be next to each artist, or they could be clickable somehow -->
-    <h1>Hello, {{ user.username }}</h1>
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" placeholder="Find an Artist" name="search_bar">
-        <input type="submit" value="Search">
-    </form>
-    <!-- TODO put this in a scrollable div, make them clickable. Will need AJAX  -->
-    <ul id="artistList">
-        {% if artists %}
-            {% for artist in artists %}
-                <li id="li_{{ artist.artist_id }}">{{ artist.artist_name }}</li>
-                <script>
-                    document.getElementById("li_{{ artist.artist_id }}").addEventListener("click", function store_artist_ajax () {
-                        //alert("{{ artist.artist_id }}");
-                        $.ajax({
-                            url: window.location.pathname,
-                            type: "POST",
-                            data: {
-                                csrfmiddlewaretoken: '{{ csrf_token }}',
-                                artist_id: '{{ artist.artist_id }}'
-                            },
-                            success: function() {
-                                //remove artist li here
-                                //alert("Success")
-                                let element = document.getElementById("li_{{ artist.artist_id }}");
-                                element.parentNode.removeChild(element);
-                            },
-                            error: function() {
-                                alert("Unsuccessful")
-                            }
-                        });
-                    });
-                </script>
-                <!-- TODO add AJAX and <a> here. The ajax should also remove the artist from dropdown -->
-            {% endfor %}
-        {% endif %}
-    </ul>
+   <nav class="topNav">
+       <ul>
+           <li>Hello, {{ user.username }}</li>
+           <li><a href='explore'>Explore Artists</a></li>
+       </ul>
+   </nav>
+    <!-- Turn this h1 into a navbar or something -->
+    <div id="screen_div">
+        <div id="addArtistDiv">  <!-- TODO this div should be a scrollbox -->
+            <h2>Track An Artist</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" placeholder="Find an Artist" name="search_bar">
+                <input type="submit" value="Search">
+            </form>
+            <ul class="artistList">
+                {% if add_artists %}
+                    {% for artist in add_artists %}
+                        <li id="li_{{ artist.artist_id }}">{{ artist.artist_name }} {{ artist.artist_id }}</li>
+                        <script>
+                            document.getElementById("li_{{ artist.artist_id }}").addEventListener("click", function store_artist_ajax () {
+                                $.ajax({
+                                    url: window.location.pathname,
+                                    type: "POST",
+                                    data: {
+                                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                                        artist_id: '{{ artist.artist_id }}'
+                                    },
+                                    success: function() {
+                                        let element = document.getElementById("li_{{ artist.artist_id }}");
+                                        element.parentNode.removeChild(element);
+                                    },
+                                    error: function() {
+                                        alert("Unsuccessful")
+                                    }
+                                });
+                            });
+                        </script>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+         </div>
+        <div id="myEventsDiv">
+            <h2>Tracked Artists Events</h2>
+            <p>This is placeholder. Make this div wider. We will put a drop down for sort by here</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Artist</th>
+                        <th>Venue</th>
+                        <th>Location</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if events %}
+                    {% for event in events %}
+                        <!-- TODO make this a grid / table -->
+                        <tr>
+                            <td>{{ event.artist.artist_name }}</td>
+                            <td>{{ event.event_name }}</td>
+                            <td>{{ event.location.city }}, {{ event.location.state }}</td>
+                            <td>{{ event.date|date:"D d, M Y"}}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div id="myArtistsDiv">
+            <h2>My Tracked Artists</h2>
+            <ul class="artistList">
+                 {% if users_artists %}
+                    {% for artist in users_artists %}
+                        <li>{{ artist.artist_name }}</li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
     <p>{{ user.username }} lives in {{ user.location.city }}, {{ user.location.state }}</p>
 
 </body>
