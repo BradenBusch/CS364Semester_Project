@@ -5,47 +5,90 @@
     <title>Find an Artist</title>
 </head>
     {% load static %}
+    {% load poll_extras %}
     <link rel="stylesheet" type="text/css" href={% static 'css/styles.css' %}>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <body>
-    <h1>Viewing based on {{ filter_val }} add top 5 most popular from each genre to right side</h1>
-    <form method="post">
-        {% csrf_token %}
-        <select name="filter_artists">
-            <option value="A - Z">A - Z</option>
-            <option value="Popularity">Popularity</option>
-            <option value="Genre - Metal">Genre - Metal</option>
-            <option value="Genre - Rock">Genre - Rock</option>
-            <option value="Genre - Rap">Genre - Rap</option>
-            <option value="Genre - Pop">Genre - Pop</option>
-        </select>
-        <input type="submit" value="Apply">
-    </form>
-    <!--<select name="filter_artists" id="selectFilter">
-        <option value="popularity" selected>Popularity</option>
-        <option value="genre">Genre</option>
-    </select>-->
-    <table>
-        <thead>
-            <tr>
-                <th>Artist</th>
-                <th>Genre</th>
-                <th># Fans</th>
-            </tr>
-        </thead>
-        <tbody id="filtered_artists">
-        {% if artists %}
-            {% for artist in artists %}
-                <tr>
-                    <td class="explore_artist_name"> {{ artist.artist_name }}</td>
-                    <td> {{ artist.genre }}</td>
-                    <td> {{ artist.num_fans }}</td>
-                </tr>
-            {% endfor %}
-        {% endif %}
-        </tbody>
-    </table>
-    
+    <nav class="topNav">
+       <ul>
+           <li><a href="{% url 'project:home' user.username %}">Home</a></li>
+       </ul>
+   </nav>
+    <div id="screen_div">
+        <div>
+            <h2>Viewing based on {{ filter_val }}</h2>
+            <h3>Looking at {{ view_num }} results</h3>
+            <form method="post">
+                {% csrf_token %}
+                <select name="filter_artists">
+                    <option value="A - Z">A - Z</option>
+                    <option value="Popularity">Popularity</option>
+                    <option value="Genre - Metal">Genre - Metal</option>
+                    <option value="Genre - Rock">Genre - Rock</option>
+                    <option value="Genre - Rap">Genre - Rap</option>
+                    <option value="Genre - Pop">Genre - Pop</option>
+                </select>
+                <input type="submit" value="Apply">
+            </form>
+            <!--<select name="filter_artists" id="selectFilter">
+                <option value="popularity" selected>Popularity</option>
+                <option value="genre">Genre</option>
+            </select>-->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Artist</th>
+                        <th>Genre</th>
+                        <th># Fans</th>
+                    </tr>
+                </thead>
+                <tbody id="filtered_artists">
+                {% if artists %}
+                    {% for artist in artists %}
+                        <tr>
+                            <td class="explore_artist_name"> {{ artist.artist_name }}</td>
+                            <td> {{ artist.genre }}</td>
+                            <td> {{ artist.num_fans|to_thousands }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <div class="topRanks">
+            <h2>Top Metal</h2>
+            <ol>
+                {% for artist in top_metal %}
+                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="topRanks">
+            <h2>Top Rock</h2>
+            <ol>
+                {% for artist in top_rock %}
+                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="topRanks">
+            <h2>Top Rap</h2>
+            <ol>
+                {% for artist in top_rap %}
+                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div class="topRanks">
+            <h2>Top Pop</h2>
+            <ol>
+                {% for artist in top_pop %}
+                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
     <!--<script>
         $("#selectFilter").on('change', function(e) {
             e.preventDefault();

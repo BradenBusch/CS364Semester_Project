@@ -10,7 +10,7 @@ class Location(models.Model):
 	city = models.CharField(max_length=50)
 
 	def __str__(self):
-		return f'id: {self.location_id}\ncity {self.city}\n'
+		return f'id: {self.location_id} city {self.city} state {self.state}'
 
 
 class User(models.Model):
@@ -24,7 +24,7 @@ class User(models.Model):
 	location = models.ForeignKey(Location, on_delete=models.CASCADE)  # Django auto adds _id to PK's
 
 	def __str__(self):
-		return f'id: {self.user_id}\n name: {self.first_name} {self.last_name}\n created at: {self.created_at}\n'
+		return f'id: {self.user_id} name: {self.first_name} {self.last_name} created at: {self.created_at} username: {self.username}'
 
 
 class Artist(models.Model):

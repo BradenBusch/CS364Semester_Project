@@ -7,16 +7,17 @@
     color: blue;
 }
 
-li {
-    list-style-type: none;
+#myArtistsDiv li:hover {
+    cursor: default;
+    color: black;
 }
 
 .artistList > li {
+    list-style-type: none;
     margin: 0 0 3px 0;
 }
 
 #screen_div {
-    border: 1px solid red;
     width: 100%;
     display: inline-flex;
     text-align: center;
@@ -31,6 +32,10 @@ td {
     border: 1px solid blue;
     float: left;
     width: 30%;
+}
+
+.topRanks {
+    margin: 20px;
 }
 
 #myArtistsDiv {
@@ -72,7 +77,11 @@ td {
 }
 
 .topNav a:hover {
-    color: gray;
+    color: red;
+}
+
+ol li {
+    margin-top: 3px;
 }
 
 /*#screen_div div {*/

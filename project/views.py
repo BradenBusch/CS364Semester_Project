@@ -7,7 +7,20 @@ from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.urls import reverse
 from .models import *
 from . import constants
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.http import JsonResponse
+from django.db.models import Count
 
+
+# TODO 4/23
+#   -> Another query with aggregate / having could be running a query to show how many artists of each genre
+#   there are.
+#   -> HAVING can be used to see the number of artists in each genre
+# SELECT Num, count(*) AS Number
+#     FROM Artist
+#     GROUP BY Genre
+#
 
 def login_signup(request):
 	# Upon start, store locations. Don't do this again unless db is dropped
@@ -90,22 +103,27 @@ def signup(request):
 def home(request, username=None):
 	# Get the tuples for the currently logged in user.
 	user = User.objects.get(username=username)
-	# Default to artists being displayed to none
+	# Default to artists and events being displayed to none
 	add_artists = None
+	events = get_tracked_artists_events(user)
 	try:
 		users_artists = user.artist_set.values('artist_name')
 	except User.DoesNotExist:
 		users_artists = None
+	# Default to showing users events
+	events = get_tracked_artists_events(user)
+
+	# This AJAX call is for building the add artist widget
 	if request.method == 'POST' and request.is_ajax:
 		artist_id = request.POST.get('artist_id', None)
 		search_res = request.POST.get('search_bar', None)
+		# Add the clicked artist to the user
 		if artist_id is not None:
 			artist = Artist.objects.get(artist_id=artist_id)  # get the artists that the user clicked
 			artist.users.add(user)  # add (UPDATE) the users artists and artists num fans
 			artist.num_fans += 1
 			artist.save()
-			print(f'artist {artist.artist_name} users: {list(artist.users.all().values())}')
-			print(f'user id: {user.user_id} artists: {list(user.artist_set.all().values())}')
+		# Update the clicked page
 		if search_res is not None:
 			# SELECT artist_name
 			#       FROM Artist
@@ -119,7 +137,6 @@ def home(request, username=None):
 			add_artists = Artist.objects.filter(artist_name__startswith=search_res).exclude(artist_name__in=users_artists).order_by('artist_name')
 			print(f'non user artists {add_artists.values("artist_name")}\nuser artists {users_artists}')
 	print(f'Username: {username}\nUser State: {user.location.state}\nUser City: {user.location.city}')
-	events = get_tracked_artists_events(user)
 	context = {
 		'user': user,
 		'add_artists': add_artists,
@@ -130,28 +147,65 @@ def home(request, username=None):
 
 
 def explore(request, username=None):
+	user = User.objects.get(username=username)
 	a_filter = 'A - Z'  # Default to sorting by A-Z
 	artists = Artist.objects.all().order_by("artist_name")
+	view_num = Artist.objects.all().count()  # Default to showing number for A-Z
+	genre_counts = Artist.objects.all().values('genre').annotate(total=Count('genre'))  # Query for
+	print(f'VIEW NUM {view_num}')
 	if request.method == 'POST' and request.is_ajax:
+		# All these view_num queries are for Group 2:
+		# 	genre_counts = Artist.objects.all().values('genre').annotate(total=Count('genre'))
+		#   view_num = genre_counts.filter(genre={genre})
+		# SELECT count(*)
+		#       FROM Artist
+		#       GROUP BY 'Genre'
+		#       HAVING Genre = '{Genre}'
+
 		a_filter = request.POST.get('filter_artists')
 		if a_filter == 'A - Z':
 			artists = Artist.objects.all().order_by("artist_name")
+			view_num = Artist.objects.all().count()
 		elif a_filter == 'Popularity':
 			artists = Artist.objects.all().order_by("-num_fans")
+			view_num = Artist.objects.all().count()
 		elif a_filter == 'Genre - Metal':
 			artists = Artist.objects.filter(genre="Metal").order_by("artist_name")
+			view_num = genre_counts.filter(genre="Metal")
+			view_num = view_num[0]['total']
 		elif a_filter == 'Genre - Rock':
 			artists = Artist.objects.filter(genre="Rock").order_by("artist_name")
+			view_num = genre_counts.filter(genre="Rock")
+			view_num = view_num[0]['total']
 		elif a_filter == 'Genre - Rap':
 			artists = Artist.objects.filter(genre="Rap").order_by("artist_name")
+			view_num = genre_counts.filter(genre="Rap")
+			view_num = view_num[0]['total']
 		elif a_filter == 'Genre - Pop':
 			artists = Artist.objects.filter(genre="Pop").order_by("artist_name")
-
+			view_num = genre_counts.filter(genre="Pop")
+			view_num = view_num[0]['total']
+	# All these queries are for Group 1:
+	# SELECT Artist.ArtistName, Artist.NumFans
+	#       FROM Artist
+	#       WHERE Genre = 'Metal'
+	#       ORDER BY Artist.NumFans DESC
+	#       LIMIT 5
+	top_metal = Artist.objects.filter(genre="Metal").order_by("-num_fans")[:5:1]
+	top_rock = Artist.objects.filter(genre="Rock").order_by("-num_fans")[:5:1]
+	top_rap = Artist.objects.filter(genre="Rap").order_by("-num_fans")[:5:1]
+	top_pop = Artist.objects.filter(genre="Pop").order_by("-num_fans")[:5:1]
+	print(f'top metal {top_metal} view num {view_num}')
 	context = {
+		'user': user,
 		'artists': artists,
 		'filter_val': a_filter,
+		'top_metal': top_metal,
+		'top_rock': top_rock,
+		'top_rap': top_rap,
+		'top_pop': top_pop,
+		'view_num': view_num,
 	}
-	print(context)
 	return render(request, 'project/explore.html', context)
 
 
@@ -169,6 +223,21 @@ def get_tracked_artists_events(user):
 	#            FROM User JOIN Tracks JOIN Artist On User.UserId = Tracks.UserId AND Artist.ArtistId = Tracks.ArtistId)
 	# get users artists ids
 	user_artist_ids = user.artist_set.values('artist_id')
-	print(f'user artist ids: {user_artist_ids}')
-	events = Event.objects.filter(artist_id__in=user_artist_ids).order_by('date')  # Get all events from tracked artists]
+	events = Event.objects.filter(artist_id__in=user_artist_ids).order_by('date')  # Get all events from tracked artists
+	print(f'events by my artists: {events}')
+	return events
+
+
+# Helper function to find the events for the user based on what city the user is in
+def get_all_events_in_location(user):
+	location_id = user.location.location_id
+	events = Event.objects.filter(location_id=location_id).order_by('date')
+	print(f'events in my location: {events}')
+	return events
+
+
+# Helper function to find all events
+def get_all_events():
+	events = Event.objects.all().order_by('date')
+	print(f'all events {events}')
 	return events
