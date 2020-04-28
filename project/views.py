@@ -1,22 +1,12 @@
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login, authenticate
+from django.shortcuts import render
 from .forms import *
-from django.contrib import messages
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpResponseRedirect
 from .models import *
-from . import constants
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-from django.http import JsonResponse
 from django.db.models import Count
 
 
 # TODO Rest of project:
 #  -> Clean up HTML / CSS. Make it look nice.
-#  -> Potentially add another query somewhere, idk where
-#  -> Add functionality to logout
 #  -> Finish adding dummy data
 
 def login_signup(request):
@@ -43,7 +33,7 @@ def login(request):
 	if request.method == 'POST':
 		# create a form instance and populate it with data from the request
 		form = LoginForm(request.POST)
-		# check whether it's valid. this just checks if the fields are filled out
+		# check if the request is valid. this just checks if the fields are filled out
 		if form.is_valid():
 			try:
 				user = User.objects.get(username=form.cleaned_data['username'])
@@ -52,18 +42,14 @@ def login(request):
 			if user.password == form.cleaned_data['password']:
 				username = form.cleaned_data['username']
 				return HttpResponseRedirect('/home/' + username + '/')
-				# return render(request, 'project/home.html', {'user'})
 			else:
 				return HttpResponseRedirect('/login/')
-				# return render(request, 'project/home.html', {})
-
-	# if a GET (or any other method) we'll create a blank form
 	else:
 		form = LoginForm()
 	return render(request, 'project/login.html', {'form': form})
 
 
-# Build the signup screen. This will also add the user to the database if they are approved
+# Build the signup screen. This will also add the user to the database if they are approved.
 def signup(request):
 	if request.method == 'POST':
 		# create a form instance and populate it with data from the request
@@ -73,19 +59,14 @@ def signup(request):
 			try:
 				user = User.objects.get(username=form.cleaned_data['username'])
 			except User.DoesNotExist:
-				new_user = form.save(commit=False)
-				new_user.password = form.cleaned_data['confirm_password']
+				new_user = form.save(commit=False)  # save the information from the form
+				new_user.password = form.cleaned_data['confirm_password']  # add other non form information to the user
 				selected_city = request.POST['selectedCity']
 				user_loc = Location.objects.get(city=selected_city)
 				# Set the users FOREIGN KEY to the location they selected
 				new_user.location = user_loc
 				new_user.save()
-				qs = User.objects.all().values()
-				print(qs)
 				return HttpResponseRedirect('/login/')
-				# return render(request, 'project/home.html', {})
-
-	# if a GET (or any other method) we'll create a blank form
 	else:
 		form = UserForm()
 	context = {
@@ -100,14 +81,13 @@ def signup(request):
 def home(request, username=None):
 	# Get the tuples for the currently logged in user.
 	user = User.objects.get(username=username)
-	# Default to artists and events being displayed to none
+	# Default to artists being shown to none
 	add_artists = None
-	events = get_tracked_artists_events(user)
 	try:
 		users_artists = user.artist_set.values('artist_name')
 	except User.DoesNotExist:
 		users_artists = None
-	# Default to showing users events
+	# Get the events from artists a user is tracking
 	events = get_tracked_artists_events(user)
 
 	# This AJAX call is for building the add artist widget
@@ -116,12 +96,14 @@ def home(request, username=None):
 		search_res = request.POST.get('search_bar', None)
 		# Add the clicked artist to the user
 		if artist_id is not None:
+			# TODO example of UPDATE
 			artist = Artist.objects.get(artist_id=artist_id)  # get the artists that the user clicked
 			artist.users.add(user)  # add (UPDATE) the users artists and artists num fans
 			artist.num_fans += 1
 			artist.save()
 		# Update the clicked page
 		if search_res is not None:
+			# TODO Group 3 Query [subquery = users_artists, overall query = add_artists
 			# SELECT artist_name
 			#       FROM Artist
 			#       WHERE artist_name LIKE "{search_res} %" AND NOT IN
@@ -146,19 +128,25 @@ def home(request, username=None):
 def explore(request, username=None):
 	user = User.objects.get(username=username)
 	a_filter = 'A - Z'  # Default to sorting by A-Z
-	artists = Artist.objects.all().order_by("artist_name")
+	artists = Artist.objects.all().order_by("artist_name")  # Order the artists
 	view_num = Artist.objects.all().count()  # Default to showing number for A-Z
-	genre_counts = Artist.objects.all().values('genre').annotate(total=Count('genre'))  # Query for
-	print(f'VIEW NUM {view_num}')
+	# This query uses group by to get the count() for each genre [genre_counts]
+	# SELECT count(*)
+	#       FROM Artist
+	#       GROUP BY Genre
+	genre_counts = Artist.objects.all().values('genre').annotate(total=Count('genre'))
 	if request.method == 'POST' and request.is_ajax:
-		# All these view_num queries are for Group 2:
-		# 	genre_counts = Artist.objects.all().values('genre').annotate(total=Count('genre'))
-		#   view_num = genre_counts.filter(genre={genre})
+		# TODO Group 1 Query [artists]
+		# SELECT ArtistName, NumFans
+		#       FROM Artist
+		#       WHERE Genre = '{Genre}'
+		#       ORDER BY ArtistName ASC
+		# TODO Group 2 Query [view_num]
+		#  -> view_num at this point adds a HAVING to the genre_counts query from above
 		# SELECT count(*)
 		#       FROM Artist
 		#       GROUP BY 'Genre'
 		#       HAVING Genre = '{Genre}'
-
 		a_filter = request.POST.get('filter_artists')
 		if a_filter == 'A - Z':
 			artists = Artist.objects.all().order_by("artist_name")
@@ -182,7 +170,7 @@ def explore(request, username=None):
 			artists = Artist.objects.filter(genre="Pop").order_by("artist_name")
 			view_num = genre_counts.filter(genre="Pop")
 			view_num = view_num[0]['total']
-	# All these queries are for Group 1:
+	# TODO Group 1 Query [top_{genre}]:
 	# SELECT Artist.ArtistName, Artist.NumFans
 	#       FROM Artist
 	#       WHERE Genre = 'Metal'
@@ -192,7 +180,6 @@ def explore(request, username=None):
 	top_rock = Artist.objects.filter(genre="Rock").order_by("-num_fans")[:5:1]
 	top_rap = Artist.objects.filter(genre="Rap").order_by("-num_fans")[:5:1]
 	top_pop = Artist.objects.filter(genre="Pop").order_by("-num_fans")[:5:1]
-	print(f'top metal {top_metal} view num {view_num}')
 	context = {
 		'user': user,
 		'artists': artists,
@@ -209,19 +196,22 @@ def explore(request, username=None):
 # Helper function to find the events for the user based on who the user is tracking
 # @param user = A User object to get the tracked events for
 def get_tracked_artists_events(user):
+	# TODO Group 2 Query [subquery = user_artist_ids, overall query = events]
 	# SELECT EventName, Ticket Price, Date, ArtistName, City, State
 	# FROM User JOIN Tracks JOIN Artist JOIN Event JOIN Location
-	# ON User.UserId = Tracks.UserId
-	# ON Artist.ArtistId = Tracks.ArtistId
-	# ON Event.ArtistId = Artist.ArtistId
-	# ON Event.LocationId = User.LocationId
-	# WHERE Artist.ArtistId IN
+	#   ON User.UserId = Tracks.UserId
+	#   ON Artist.ArtistId = Tracks.ArtistId
+	#   ON Event.ArtistId = Artist.ArtistId
+	#   ON Event.LocationId = User.LocationId
+	#   WHERE Artist.ArtistId IN
 	#           (SELECT Artist.ArtistId
 	#            FROM User JOIN Tracks JOIN Artist On User.UserId = Tracks.UserId AND Artist.ArtistId = Tracks.ArtistId)
-	# get users artists ids
+	#   ORDER BY Event.Date ASC
+
+	# get users artists ids (subquery)
 	user_artist_ids = user.artist_set.values('artist_id')
-	events = Event.objects.filter(artist_id__in=user_artist_ids).order_by('date')  # Get all events from tracked artists
-	print(f'events by my artists: {events}')
+	# get all events that are being performed by tracked artists
+	events = Event.objects.filter(artist_id__in=user_artist_ids).order_by('date')
 	return events
 
 
