@@ -32,7 +32,6 @@ class Artist(models.Model):
 	artist_id = models.AutoField(primary_key=True)
 	genre = models.CharField(max_length=50)
 	num_fans = models.IntegerField()
-	# bio_link = models.CharField(max_)
 	artist_name = models.CharField(max_length=200)
 
 	def __str__(self):

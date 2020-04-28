@@ -7,6 +7,30 @@ Make Them Suffer,Metal,250000
 Erra,Metal,170000
 Parkway Drive,Metal,1200000
 Architects,Metal,900000
+After The Burial,Metal,250000
+AKTHESAVIOR,Rap,300000
+Arizona Zervas,Rap,23000000
+Azizi Gibson,Rap,650000
+Bazanji,Rap,800000
+Blackbear,Pop,6000000
+Caye,Pop,1200000
+Counterparts,Metal,160000
+Cyrus,Pop,50000
+Currents,Metal,250000
+A Day To Remember,Metal,2000000
+Denzel Curry,Rap,6000000
+Flatbush Zombies,Rap,4000000
+Ghost,Rock,15000000
+Ghostemane,Rap,3000000
+Pouya,Rap,1200000
+Gojira,Metal,3000000
+In Hearts Wake,Metal,125000
+Jack Harlow,Rap,7000000
+Joey Bada$$,Rap,5000000
+Justin Stone,Rap,1000000
+Juice WRLD,Rap,30000000
+Lil Skies,Rap,8000000
+Rexx Life Raj,Pop,800000
 Rise Against,Rock,2000000
 Three Days Grace,Rock,4000000
 Shinedown,Rock,3000000
@@ -27,3 +51,5 @@ Lady Gaga,Pop,15200000
 Katy Perry,Pop,17200000
 Justin Bieber,Pop,28000000
 Usher,Pop,9000000
+Ryan Caraveo,Pop,1100000
+RIZ LA VIE,Pop,1000000

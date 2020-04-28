@@ -13,24 +13,21 @@ from django.http import JsonResponse
 from django.db.models import Count
 
 
-# TODO 4/23
-#   -> Another query with aggregate / having could be running a query to show how many artists of each genre
-#   there are.
-#   -> HAVING can be used to see the number of artists in each genre
-# SELECT Num, count(*) AS Number
-#     FROM Artist
-#     GROUP BY Genre
-#
+# TODO Rest of project:
+#  -> Clean up HTML / CSS. Make it look nice.
+#  -> Potentially add another query somewhere, idk where
+#  -> Add functionality to logout
+#  -> Finish adding dummy data
 
 def login_signup(request):
 	# Upon start, store locations. Don't do this again unless db is dropped
 	# If you drop all tables, you need to change constants.STORE_LOCATIONS back to True
-	if constants.STORE_LOCATIONS is True:
-		constants.store_locations()
-	if constants.STORE_ARTISTS is True:
-		constants.store_artists()
-	if constants.STORE_EVENTS is True:
-		constants.store_events()
+	# if constants.STORE_LOCATIONS is True:
+	# constants.store_locations()
+	# if constants.STORE_ARTISTS is True:
+	# constants.store_artists()
+	# if constants.STORE_EVENTS is True:
+	# constants.store_events()
 	q = Location.objects.all().values()
 	print(q)
 	q = list(Artist.objects.all().values())
