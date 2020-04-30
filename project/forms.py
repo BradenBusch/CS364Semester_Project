@@ -4,7 +4,7 @@ from project.models import *
 states2 = [("Illinois", "Illinois"), ("Iowa", "Iowa"), ("Minnesota", "Minnesota"), ("Wisconsin", "Wisconsin")]
 
 cities2 = [("Aurora", "Aurora"), ("Chicago", "Chicago"), ("Cedar Rapids", "Cedar Rapids"), ("Des Moines", "Des Moines"),
-          ("Madison", "Madison"), ("Minneapolis", "Minneapolis"), ("Milwaukee", "Milwaukee"), ("St. Paul", "St. Paul")]
+           ("Madison", "Madison"), ("Minneapolis", "Minneapolis"), ("Milwaukee", "Milwaukee"), ("St. Paul", "St. Paul")]
 
 states = ["Illinois", "Iowa", "Minnesota", "Wisconsin"]
 
@@ -16,7 +16,6 @@ class SearchArtist(forms.Form):
 
 
 class LoginForm(forms.ModelForm):
-
 	class Meta:
 		model = User
 		fields = ['username', 'password']
@@ -35,6 +34,7 @@ class LoginForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput)
 	confirm_password = forms.CharField(widget=forms.PasswordInput)
+
 	# state = forms.ChoiceField(choices=states)
 	# city = forms.ChoiceField(choices=cities)
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login page</title>
+    <title>Login</title>
 </head>
 <body>
     <h1>Login</h1>
@@ -39,6 +39,11 @@
         background-color: gray;
     }
 
+    input:hover {
+        border: 1px solid white;
+        cursor: default;
+    }
+
     form {
         margin: 0 auto;
         max-width: 260px;
@@ -48,6 +53,7 @@
         border-radius: 5px;
         border: solid gray 1px;
         box-shadow: 2px 2px 5px #606060;
+        padding: 3px;
     }
 
     input[type="submit"]{
@@ -58,6 +64,10 @@
         font-size: 1.1em;
         background-color: #6699CC;
         border: solid 1px #606060;
+    }
+
+    input[type="submit"]:hover{
+        border: 2px solid white;
     }
 
     body{

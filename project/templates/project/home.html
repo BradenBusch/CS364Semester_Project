@@ -25,7 +25,7 @@
                 <input type="text" placeholder="Find an Artist" name="search_bar">
                 <input type="submit" value="Search">
             </form>
-            <ul class="artistList">
+            <ul class="artistList" id="addArtistList">
                 {% if add_artists %}
                     {% for artist in add_artists %}
                         <li id="li_{{ artist.artist_id }}">{{ artist.artist_name }}</li>
@@ -142,6 +142,7 @@
     p{
         padding-left: 7vw;
         padding-right: 7vw;
+        color: #466a91
     }
 
     form > input[type="text"]{
@@ -149,6 +150,10 @@
         border: solid gray 1px;
         box-shadow: 2px 2px 5px #606060;
         background-color: gray;
+    }
+
+    form > input:hover {
+        cursor: default;
     }
 
     form > input[type="text"]::placeholder{
@@ -180,8 +185,11 @@
     }
     /* End Quick Add Artists styles */
 
+    thead  {
+        color: #466a91;
+    }
     tr {
-        border-bottom: solid black 1px;
+        border-bottom: 1px solid;
     }
 
     td{
@@ -204,6 +212,15 @@
         display: inline-block;
         width: 1.2em;
         margin-left: 1em;
+    }
+
+    #addArtistList li:hover {
+        cursor: pointer;
+        color: #6699CC;
+    }
+
+    h2 {
+        color: #6699CC;
     }
 
     body{

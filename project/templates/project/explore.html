@@ -198,12 +198,20 @@
         counter-increment: li;
     }
 
-    li::before {
+    ol li::before {
         content: counter(li)".";
-        color: #6699CC;
+        color: #466a91;
         display: inline-block;
         width: 1.2em;
         margin-left: -1em;
+    }
+
+    h2 {
+        color: #6699CC;
+    }
+
+    thead, h3 {
+        color: #466a91;
     }
     /*End color list numbers */
 
