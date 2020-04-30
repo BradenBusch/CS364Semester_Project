@@ -6,7 +6,7 @@
 </head>
     {% load static %}
     {% load poll_extras %}
-    <link rel="stylesheet" type="text/css" href={% static 'css/styles.css' %}>
+{#    <link rel="stylesheet" type="text/css" href={% static 'css/styles.css' %}>#}
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 <body>
     <nav class="topNav">
@@ -16,9 +16,9 @@
        </ul>
    </nav>
     <div id="screen_div">
-        <div>
-            <h2>Viewing based on {{ filter_val }}</h2>
-            <h3>Looking at {{ view_num }} results</h3>
+        <div id="div_search">
+            <h2 style="text-align: center">Viewing based on {{ filter_val }}</h2>
+            <h3 style="text-align: center">Looking at {{ view_num }} results</h3>
             <form method="post">
                 {% csrf_token %}
                 <select name="filter_artists">
@@ -56,37 +56,39 @@
                 </tbody>
             </table>
         </div>
-        <div class="topRanks">
-            <h2>Top Metal</h2>
-            <ol>
-                {% for artist in top_metal %}
-                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
-                {% endfor %}
-            </ol>
-        </div>
-        <div class="topRanks">
-            <h2>Top Rock</h2>
-            <ol>
-                {% for artist in top_rock %}
-                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
-                {% endfor %}
-            </ol>
-        </div>
-        <div class="topRanks">
-            <h2>Top Rap</h2>
-            <ol>
-                {% for artist in top_rap %}
-                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
-                {% endfor %}
-            </ol>
-        </div>
-        <div class="topRanks">
-            <h2>Top Pop</h2>
-            <ol>
-                {% for artist in top_pop %}
-                    <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
-                {% endfor %}
-            </ol>
+            <div id="div_topgenres">
+                <div class="topRanks">
+                <h2>Top Metal</h2>
+                <ol>
+                    {% for artist in top_metal %}
+                        <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="topRanks">
+                <h2>Top Rock</h2>
+                <ol>
+                    {% for artist in top_rock %}
+                        <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="topRanks">
+                <h2>Top Rap</h2>
+                <ol>
+                    {% for artist in top_rap %}
+                        <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="topRanks">
+                <h2>Top Pop</h2>
+                <ol>
+                    {% for artist in top_pop %}
+                        <li>{{ artist.artist_name }}: {{ artist.num_fans|to_thousands }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
         </div>
     </div>
 
@@ -110,4 +112,104 @@
     </script>-->
 
 </body>
+<style>
+    * {
+        font-family: sans-serif;
+    }
+    /* Start header styles */
+    .topNav{
+        z-index: 99;
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100vw;
+        background-color: #6699CC;
+        padding-left: 50px;
+    }
+
+    .topNav ul li{
+        display: inline;
+    }
+
+    .topNav a{
+        text-decoration: none;
+        color: #303032;
+        padding-right: 20px;
+        font-weight: bold;
+    }
+
+    a:hover{
+        text-decoration: underline;
+    }
+    /* End header styles */
+    /*Start search result styles */
+    #screen_div {
+        display: table;
+        {#flex-direction: column;#}
+        margin: 0 auto;
+        padding-top: 50px;
+        padding-bottom: 50px;
+    }
+
+    #screen_div > div{
+        vertical-align: top;
+        display: inline-block;
+    }
+
+    #div_search{
+        margin-right: 100px;
+    }
+
+    #div_search > form{
+        margin: 0 auto;
+        width: 165px;
+        margin-bottom: 10px;
+    }
+
+    form > select{
+        border-radius: 5px;
+        border: solid gray 1px;
+        box-shadow: 2px 2px 5px #606060;
+        background-color: gray;
+    }
+
+    form > input {
+        border-radius: 5px;
+        border: solid 1px #606060;
+        box-shadow: 2px 2px 5px #606060;
+        background-color: #6699CC;
+        font-weight: bold;
+    }
+
+    form > input:hover{
+        color: #303032;
+    }
+
+    td, li {
+        color: gray;
+    }
+    /* Start color list numbers blue (Possibly remove this, idk)*/
+    ol {
+        list-style: none;
+        counter-reset: li
+    }
+
+    li {
+        counter-increment: li;
+    }
+
+    li::before {
+        content: counter(li)".";
+        color: #6699CC;
+        display: inline-block;
+        width: 1.2em;
+        margin-left: -1em;
+    }
+    /*End color list numbers */
+
+    /*End search result styles */
+    body{
+        background-color: #303032;
+    }
+</style>
 </html>

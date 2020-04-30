@@ -17,5 +17,69 @@
             <option value="{{ city }}">{{ city }}</option>
         {% endfor %}
     </select>
-    <input type="submit" value="Submit">
+    <input type="submit" value="Sign Up">
 </form>
+<style>
+    *{
+        font-family: sans-serif;
+    }
+    h2 {
+        {#max-width: 100px;#}
+        font-size: 2em;
+        text-align: center;
+        margin-top: 100px;
+        color: #6699CC;
+    }
+
+    label{
+        color: gray;
+    }
+
+    small{
+        color: gray;
+    }
+
+    form {
+        margin: 0 auto;
+        max-width: 310px;
+    }
+
+    input{
+        border-radius: 5px;
+        border: solid gray 1px;
+        box-shadow: 2px 2px 5px #606060;
+    }
+
+    select{
+        border-radius: 5px;
+        border: solid gray 1px;
+        box-shadow: 2px 2px 5px #606060;
+        background-color: gray;
+    }
+
+    input[type="submit"]{
+        margin-top: 20px;
+        margin-left: 55px;
+        height: 30px;
+        width: 200px;
+        font-size: 1.1em;
+        background-color: #6699CC;
+        border: solid 1px #606060;
+    }
+
+    input[type="submit"]:hover{
+        color: #303032;
+    }
+
+    input[type="text"]{
+        background-color: gray;
+    }
+
+    input[type="password"]{
+        background-color: gray;
+    }
+
+    body {
+        background-color: #303032;
+    }
+</style>
