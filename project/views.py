@@ -5,10 +5,6 @@ from .models import *
 from django.db.models import Count
 
 
-# TODO Rest of project:
-#  -> Clean up HTML / CSS. Make it look nice.
-#  -> Finish adding dummy data
-
 def login_signup(request):
 	# Upon start, store locations. Don't do this again unless db is dropped
 	# If you drop all tables, you need to change constants.STORE_LOCATIONS back to True
